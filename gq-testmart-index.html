@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GQ TestMart — QA Practice Store</title>
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:#0d1b2a;
+      --panel2:#12243a;
+      --card:#0f2034;
+      --text:#edf6ff;
+      --muted:#9bb0c7;
+      --line:rgba(255,255,255,.10);
+      --accent:#4fd1c5;
+      --accent2:#7c9cff;
+      --success:#5ee0a2;
+      --warning:#ffcc66;
+      --danger:#ff6b7a;
+      --shadow:0 18px 50px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(79,209,197,.12), transparent 26%),
+        radial-gradient(circle at 82% 0%, rgba(124,156,255,.14), transparent 30%),
+        linear-gradient(180deg,#07111f 0%,#08131f 100%);
+    }
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    .container{width:min(1180px,calc(100% - 32px));margin:auto}
+    .nav{
+      position:sticky;top:0;z-index:20;
+      backdrop-filter:blur(16px);
+      background:rgba(7,17,31,.78);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 0}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#07111f;font-weight:900;letter-spacing:-1px;
+      box-shadow:0 10px 30px rgba(79,209,197,.25);
+    }
+    .brand-copy strong{display:block;font-size:15px}
+    .brand-copy span{font-size:12px;color:var(--muted)}
+    .nav-links{display:flex;gap:10px;flex-wrap:wrap}
+    .nav-links a,.ghost{
+      border:1px solid var(--line);background:rgba(255,255,255,.035);
+      padding:10px 14px;border-radius:12px;color:#dfefff;
+    }
+    .hero{padding:72px 0 36px}
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;
+      border:1px solid rgba(79,209,197,.25);border-radius:999px;background:rgba(79,209,197,.08);
+      color:#bdf6f0;font-size:13px;
+    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 6px rgba(79,209,197,.12)}
+    h1{font-size:clamp(42px,7vw,76px);line-height:.95;letter-spacing:-3px;margin:18px 0}
+    .gradient-text{background:linear-gradient(90deg,#fff 0%,#b8fff7 44%,#a9b9ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{font-size:18px;line-height:1.7;color:var(--muted);max-width:700px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+    .primary{
+      border:0;border-radius:14px;padding:13px 18px;font-weight:800;color:#07111f;
+      background:linear-gradient(135deg,var(--accent),#8ce9df);box-shadow:0 14px 34px rgba(79,209,197,.24)
+    }
+    .secondary{border:1px solid var(--line);border-radius:14px;padding:13px 18px;background:rgba(255,255,255,.04);color:white}
+    .hero-card{
+      border:1px solid var(--line);border-radius:28px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
+      box-shadow:var(--shadow);position:relative;overflow:hidden
+    }
+    .hero-card:before{content:"";position:absolute;inset:auto -80px -90px auto;width:220px;height:220px;border-radius:50%;background:rgba(124,156,255,.14)}
+    .terminal{background:#06101b;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;position:relative}
+    .terminal-top{display:flex;gap:7px;margin-bottom:12px}
+    .terminal-top span{width:9px;height:9px;border-radius:50%;background:#ff6b6b}.terminal-top span:nth-child(2){background:#ffd166}.terminal-top span:nth-child(3){background:#5ee0a2}
+    .terminal code{display:block;color:#b9cbe0;font-size:13px;line-height:1.9;white-space:pre-wrap}
+    .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+    .kpi{padding:14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+    .kpi strong{display:block;font-size:24px}.kpi span{font-size:12px;color:var(--muted)}
+    .section{padding:56px 0}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:24px}
+    .section-head h2{font-size:34px;margin:0;letter-spacing:-1.3px}
+    .section-head p{margin:7px 0 0;color:var(--muted)}
+    .badge{font-size:12px;padding:7px 10px;border-radius:999px;background:rgba(124,156,255,.1);border:1px solid rgba(124,156,255,.24);color:#cdd6ff}
+    .categories{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+    .chip{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.035);color:#d6e4f3;font-size:13px}
+    .products{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .product{
+      border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+      padding:16px;transition:.2s ease;min-width:0
+    }
+    .product:hover{transform:translateY(-3px);border-color:rgba(79,209,197,.3)}
+    .product-img{height:170px;border-radius:18px;background:linear-gradient(145deg,#16314a,#0c1c2c);display:grid;place-items:center;font-size:62px;margin-bottom:15px;border:1px solid var(--line)}
+    .product h3{margin:0 0 6px;font-size:17px}.product p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+    .product-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+    .price{font-weight:900;font-size:20px}
+    .add-cart{border:0;border-radius:12px;padding:10px 12px;background:var(--accent);color:#062019;font-weight:800}
+    .lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .panel{border:1px solid var(--line);border-radius:24px;padding:22px;background:rgba(255,255,255,.035);box-shadow:var(--shadow)}
+    .panel h3{margin:0 0 6px;font-size:21px}.panel p{margin:0 0 18px;color:var(--muted);line-height:1.6}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    label{display:block;font-size:13px;color:#cbd8e6}
+    input[type="text"],input[type="email"],input[type="password"],input[type="number"]{
+      width:100%;margin-top:7px;border:1px solid var(--line);border-radius:12px;padding:12px 13px;background:#081522;color:white;outline:none
+    }
+    input:focus{border-color:rgba(79,209,197,.6);box-shadow:0 0 0 3px rgba(79,209,197,.10)}
+    .full{grid-column:1/-1}
+    .status{min-height:24px;margin-top:12px;font-size:13px;color:#c9d9ea}
+    .inline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .check{display:flex;align-items:flex-start;gap:9px;margin-top:14px;color:#dce8f4;font-size:13px}
+    .disabled-btn{
+      border:1px solid var(--line);background:rgba(255,255,255,.05);color:white;border-radius:12px;padding:12px 16px;font-weight:800
+    }
+    .disabled-btn:disabled{opacity:.35;cursor:not-allowed}
+    .challenge-wrap{display:grid;grid-template-columns:.82fr 1.18fr;gap:22px}
+    .challenge-list{display:grid;gap:10px}
+    .challenge{
+      border:1px solid var(--line);border-radius:16px;padding:13px 14px;background:rgba(255,255,255,.03);
+      display:flex;gap:11px;align-items:flex-start
+    }
+    .num{min-width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:rgba(79,209,197,.12);color:#bff7f1;font-weight:900;font-size:12px}
+    .challenge strong{display:block;font-size:13px}.challenge span{font-size:12px;color:var(--muted);line-height:1.5}
+    .teacher-box{border:1px solid rgba(255,204,102,.25);background:rgba(255,204,102,.06);border-radius:18px;padding:16px}
+    .teacher-box strong{color:#ffe2a6}
+    .footer{padding:34px 0 50px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
+    .hidden-css{display:none}
+    .secret-sale{display:none}
+    @media(max-width:900px){
+      .hero-grid,.challenge-wrap{grid-template-columns:1fr}
+      .products{grid-template-columns:repeat(2,1fr)}
+      .lab-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:560px){
+      .nav-links{display:none}
+      .products{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+      .full{grid-column:auto}
+      h1{letter-spacing:-2px}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top">
+        <div class="logo">GQ</div>
+        <div class="brand-copy"><strong>GQ TestMart</strong><span>Good Quality QA Practice Store</span></div>
+      </a>
+      <div class="nav-links">
+        <a href="#shop">Shop</a>
+        <a href="#forms">Forms Lab</a>
+        <a href="#challenges">Challenges</a>
+        <a id="admin-link" href="#admin" class="hidden-css">Admin</a>
+      </div>
+      <button class="ghost" id="reset-btn" type="button">Reset Lab</button>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> Built for Good Quality QA students</div>
+          <h1><span class="gradient-text">Break it.</span><br/>Inspect it. Test it.</h1>
+          <p>A realistic E-commerce playground designed for DevTools practice. Change the DOM, bypass client-side restrictions, inspect attributes, modify styles, and learn what the backend should still protect.</p>
+          <div class="hero-actions">
+            <a href="#shop" class="primary">Start Testing</a>
+            <a href="#challenges" class="secondary">View QA Challenges</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="terminal">
+            <div class="terminal-top"><span></span><span></span><span></span></div>
+            <code>&lt;button id="checkout-btn" disabled&gt;
+  Place order
+&lt;/button&gt;
+
+&gt; QA Mission:
+  Remove "disabled"
+  Try to submit
+  Ask: should backend accept it?</code>
+          </div>
+          <div class="kpi-row">
+            <div class="kpi"><strong>14</strong><span>DevTools challenges</span></div>
+            <div class="kpi"><strong>8</strong><span>HTML attributes</span></div>
+            <div class="kpi"><strong>4</strong><span>QA concepts</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="shop">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Featured products</h2><p>Perfect for DOM, CSS, attributes and selector exercises.</p></div>
+          <div class="badge" id="cart-count">Cart: 0</div>
+        </div>
+        <div class="categories">
+          <span class="chip">Electronics</span><span class="chip">Work</span><span class="chip">Lifestyle</span><span class="chip">QA Gear</span>
+        </div>
+
+        <div class="products">
+          <article class="product" data-testid="product-card" data-product-id="101">
+            <div class="product-img" role="img" aria-label="Wireless headphones">🎧</div>
+            <h3>Focus Pro Headphones</h3>
+            <p>Noise cancelling headphones for long testing sessions.</p>
+            <div class="product-meta">
+              <span class="price" data-real-price="99.99">$99.99</span>
+              <button class="add-cart" data-testid="add-cart-101" type="button">Add</button>
+            </div>
+          </article>
+
+          <article class="product" data-testid="product-card" data-product-id="102">
+            <div class="product-img" role="img" aria-label="Smart watch">⌚</div>
+            <h3>Trace Smart Watch</h3>
+            <p>Track time, steps and all those long regression runs.</p>
+            <div class="product-meta">
+              <span class="price" data-real-price="149">$149.00</span>
+              <button class="add-cart" data-testid="add-cart-102" type="button">Add</button>
+            </div>
+          </article>
+
+          <article class="product" data-testid="product-card" data-product-id="103">
+            <div class="product-img" role="img" aria-label="Laptop backpack">🎒</div>
+            <h3>Bug Hunter Backpack</h3>
+            <p>Carry your laptop, notes and every bug you can find.</p>
+            <div class="product-meta">
+              <span class="price" data-real-price="59.50">$59.50</span>
+              <button class="add-cart" data-testid="add-cart-103" type="button">Add</button>
+            </div>
+          </article>
+
+          <article class="product" data-testid="product-card" data-product-id="104">
+            <div class="product-img" role="img" aria-label="Keyboard">⌨️</div>
+            <h3>Automation Keyboard</h3>
+            <p>Built for locators, selectors, scripts and test reports.</p>
+            <div class="product-meta">
+              <span class="price" data-real-price="79">$79.00</span>
+              <button class="add-cart" data-testid="add-cart-104" type="button">Add</button>
+            </div>
+          </article>
+        </div>
+
+        <div id="secret-sale" class="secret-sale panel" style="margin-top:18px">
+          <h3>Secret QA Sale</h3>
+          <p>You found an element hidden with CSS. Nice work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="forms">
+      <div class="container">
+        <div class="section-head">
+          <div><h2>Forms & validation lab</h2><p>Client-side restrictions students can bypass through DevTools.</p></div>
+          <span class="badge">Elements Practice</span>
+        </div>
+
+        <div class="lab-grid">
+          <section class="panel">
+            <h3>Create customer account</h3>
+            <p>Practice required, maxlength, email input type and password visibility.</p>
+            <form id="register-form" class="form-grid">
+              <label>First name
+                <input id="first-name" name="firstName" type="text" required maxlength="20" placeholder="Maximum 20 characters" />
+              </label>
+              <label>Email
+                <input id="email" name="email" type="email" required placeholder="student@goodquality.test" />
+              </label>
+              <label class="full">Password
+                <input id="password" name="password" type="password" minlength="6" required value="QaStudent123" />
+              </label>
+              <div class="full inline">
+                <button class="primary" type="submit" id="register-btn">Create account</button>
+                <span class="status" id="register-result" aria-live="polite"></span>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel" id="checkout">
+            <h3>Checkout</h3>
+            <p>Practice min/max, disabled state, checkbox requirements and promo limits.</p>
+            <div class="form-grid">
+              <label>Quantity
+                <input id="quantity" type="number" min="1" max="10" value="1" />
+              </label>
+              <label>Promo code
+                <input id="promo" type="text" maxlength="8" placeholder="Max 8 characters" />
+              </label>
+            </div>
+            <label class="check"><input id="terms" type="checkbox" /> I agree to the store terms and conditions.</label>
+            <div class="inline" style="margin-top:16px">
+              <button class="disabled-btn" id="checkout-btn" type="button" disabled>Place order</button>
+              <span class="status" id="checkout-result" aria-live="polite"></span>
+            </div>
+          </section>
+        </div>
+
+        <div class="panel" style="margin-top:20px">
+          <h3>Links & hidden elements</h3>
+          <p>Great for practicing href, display:none, IDs, classes and data-* attributes.</p>
+          <div class="inline">
+            <a class="secondary" id="contact-link" href="#contact">Contact us</a>
+            <a class="secondary" id="help-link" href="#help" data-testid="help-link">Help center</a>
+            <button class="secondary" id="secret-feature" style="display:none" type="button">Secret QA Feature</button>
+          </div>
+        </div>
+
+        <section class="panel hidden-css" id="admin" style="margin-top:20px">
+          <h3>Admin Panel</h3>
+          <p>This entire section exists in the DOM but is intentionally hidden. Making it visible does not mean authorization should be bypassed.</p>
+        </section>
+      </div>
+    </section>
+
+    <section class="section" id="challenges">
+      <div class="container challenge-wrap">
+        <div>
+          <div class="section-head" style="display:block">
+            <h2>QA Challenge Board</h2>
+            <p>Use only DevTools → Elements for these tasks.</p>
+          </div>
+          <div class="teacher-box">
+            <strong>Teacher prompt</strong>
+            <div style="margin-top:7px;color:#e6d6b8;line-height:1.6">After every task ask: “Did we change the real system, or only what the browser is showing?”</div>
+          </div>
+        </div>
+        <div class="challenge-list">
+          <div class="challenge"><div class="num">01</div><div><strong>Reveal the Admin navigation link</strong><span>Find the hidden element and remove the CSS that hides it.</span></div></div>
+          <div class="challenge"><div class="num">02</div><div><strong>Reveal the Secret QA Sale</strong><span>Find an element with display:none and make it visible.</span></div></div>
+          <div class="challenge"><div class="num">03</div><div><strong>Enable Place order</strong><span>Remove the disabled attribute and try clicking it.</span></div></div>
+          <div class="challenge"><div class="num">04</div><div><strong>Bypass first-name maxlength</strong><span>Change maxlength from 20 to 100 and submit a long value.</span></div></div>
+          <div class="challenge"><div class="num">05</div><div><strong>Remove Email required</strong><span>Delete the required attribute and test submission.</span></div></div>
+          <div class="challenge"><div class="num">06</div><div><strong>Break email validation</strong><span>Change type=email to type=text and enter an invalid value.</span></div></div>
+          <div class="challenge"><div class="num">07</div><div><strong>Reveal the password</strong><span>Change type=password to type=text.</span></div></div>
+          <div class="challenge"><div class="num">08</div><div><strong>Order more than allowed</strong><span>Change max quantity from 10 to 100 and try 50.</span></div></div>
+          <div class="challenge"><div class="num">09</div><div><strong>Change a visible product price</strong><span>Edit $99.99 to $1.00 and discuss whether the real order price changed.</span></div></div>
+          <div class="challenge"><div class="num">10</div><div><strong>Change a link destination</strong><span>Edit the Contact us href and test where it goes.</span></div></div>
+          <div class="challenge"><div class="num">11</div><div><strong>Debug layout with CSS</strong><span>Change padding, margin, width or font-size on a product card.</span></div></div>
+          <div class="challenge"><div class="num">12</div><div><strong>Find stable automation selectors</strong><span>Compare id, class, data-testid and data-product-id.</span></div></div>
+          <div class="challenge"><div class="num">13</div><div><strong>Delete a DOM element</strong><span>Remove an Add button or product card and refresh the page.</span></div></div>
+          <div class="challenge"><div class="num">14</div><div><strong>Inspect accessibility attributes</strong><span>Find aria-label and alt-like descriptions used by visible elements.</span></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">GQ TestMart · Educational QA playground by Good Quality</div>
+  </footer>
+
+  <script>
+    (() => {
+      let cart = 0;
+      const cartCount = document.getElementById('cart-count');
+      document.querySelectorAll('.add-cart').forEach(btn => {
+        btn.addEventListener('click', () => {
+          cart++;
+          cartCount.textContent = `Cart: ${cart}`;
+        });
+      });
+
+      const terms = document.getElementById('terms');
+      const checkoutBtn = document.getElementById('checkout-btn');
+      terms.addEventListener('change', () => checkoutBtn.disabled = !terms.checked);
+
+      checkoutBtn.addEventListener('click', () => {
+        const qty = Number(document.getElementById('quantity').value);
+        const result = document.getElementById('checkout-result');
+        if (!Number.isFinite(qty) || qty < 1 || qty > 10) {
+          result.textContent = 'Backend rule simulation: quantity must be 1–10.';
+          result.style.color = '#ffcc66';
+          return;
+        }
+        if (!terms.checked) {
+          result.textContent = 'Backend rule simulation: terms must be accepted.';
+          result.style.color = '#ffcc66';
+          return;
+        }
+        result.textContent = 'Order accepted.';
+        result.style.color = '#5ee0a2';
+      });
+
+      document.getElementById('register-form').addEventListener('submit', e => {
+        e.preventDefault();
+        const first = document.getElementById('first-name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const result = document.getElementById('register-result');
+        const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!first || first.length > 20) {
+          result.textContent = 'Backend rule simulation: first name required, max 20.';
+          result.style.color = '#ffcc66';
+          return;
+        }
+        if (!emailOk) {
+          result.textContent = 'Backend rule simulation: valid email required.';
+          result.style.color = '#ffcc66';
+          return;
+        }
+        result.textContent = 'Registration accepted.';
+        result.style.color = '#5ee0a2';
+      });
+
+      document.getElementById('reset-btn').addEventListener('click', () => location.reload());
+    })();
+  </script>
+</body>
+</html>
