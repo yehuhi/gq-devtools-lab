@@ -1,0 +1,10 @@
+[build]
+  publish = "."
+
+# Proxy API calls to the Railway backend so the frontend can keep using
+# relative paths like fetch('/api/products') without any code changes.
+[[redirects]]
+  from = "/api/*"
+  to = "https://gq-devtools-lab-production.up.railway.app/api/:splat"
+  status = 200
+  force = true
