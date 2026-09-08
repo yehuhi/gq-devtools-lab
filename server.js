@@ -261,6 +261,14 @@ function serveStatic(req, res, url) {
 }
 
 const server = http.createServer(async (req, res) => {
+  // CORS: the frontend (e.g. on Netlify) is served from a different origin
+  // than this API (Railway), so cross-origin requests need explicit headers.
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Vary', 'Origin');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
+
   const url = new URL(req.url, `http://${req.headers.host}`);
   if (url.pathname.startsWith('/api/')) return api(req, res, url);
   serveStatic(req, res, url);

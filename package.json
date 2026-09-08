@@ -1,0 +1,13 @@
+{
+  "name": "gq-devtools-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GQ DevTools Lab - Manual QA Training backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
