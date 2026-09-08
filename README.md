@@ -1,4 +1,6 @@
-# GQ DevTools Lab - Manual QA Training
+# GQ DevTools Lab
+
+Manual QA classroom lab for Chrome DevTools: Elements, Console, Network, API preconditions, reusable QA utility functions, and Teacher Mode.
 
 ## Run locally
 
@@ -6,45 +8,35 @@
 node server.js
 ```
 
-Open:
+Open `http://localhost:3000`.
 
-```text
-http://localhost:3000
-```
-
-If port 3000 is already in use:
-
-```bash
-PORT=3100 node server.js
-```
-
-## Teacher Mode
-
-Teacher solutions are hidden by default and are fetched from the server only after teacher authentication.
-
-Default local teacher PIN:
-
-```text
-GQ2026
-```
-
-For classroom/deployed use, set your own PIN before starting the server:
+Optional private Teacher PIN:
 
 ```bash
 TEACHER_PIN="your-private-pin" node server.js
 ```
 
-The teacher session lasts up to 8 hours in the current browser session. Use **Lock solutions** when finished.
+Default local training PIN: `GQ2026`.
 
-Teacher Mode includes a solution for every Elements, Console, Network and Final Investigation exercise, with:
+## New API workflow practice
 
-- How to solve the exercise
-- Exact Console command/script when relevant
-- What to inspect in Network
-- Expected QA conclusion
+The UI now includes real training flows for:
+- `POST /api/customers`
+- `POST /api/policies`
+- `GET /api/policies/:id`
+- `PATCH /api/policies/:id`
+- `POST /api/policies/:id/cancel`
+- `POST /api/claims`
+- `POST /api/payments`
 
-## Important training concept
+Students perform the action in the UI, inspect it in Network, use Copy as fetch, run it in Console, and then convert it into a reusable function.
 
-Console/API scripts in this lab are used to create **test preconditions and test data faster**. They do not replace manual testing of the functionality that is actually under test.
+The challenge board includes 12 QA Utility Function exercises covering `createCustomer`, `createPolicy`, `createClaim`, `createPayment`, `updatePolicy`, `cancelPolicy`, `getPolicy`, bulk creation, and Chrome DevTools Snippets.
 
-Example: if the test target is Policy Cancellation, a tester may create an ACTIVE policy via Console/API, then perform and verify the cancellation manually through the UI.
+Teacher solutions are hidden by default and are fetched from the server only after Teacher Mode is unlocked.
+
+All data is in memory and resets when the Node server restarts.
+
+
+## Function progression
+The QA Utility Functions track now teaches: Copy as fetch -> fixed function -> parameters -> default values -> chained precondition helpers -> saving the final toolkit in Chrome DevTools Snippets.
